@@ -1,0 +1,123 @@
+{
+  "project": "Universo del Conocimiento — Tesis de Grado",
+  "objective": "Unificar login y dashboard en una web profesional con roles (admin/tutor/student), backend MySQL, documentación completa.",
+  "repository_structure": {
+    "base": "next.js-proyecto2/",
+    "folders": {
+      "web/": "Frontend Next.js (App Router + Tailwind v4 + Zustand)",
+      "web/app/": "Páginas y layouts",
+      "web/components/": "Componentes reutilizables",
+      "web/lib/": "Stores Zustand, utilerías, cliente API",
+      "web/public/": "Assets estáticos",
+      "server/": "Backend Express 5 + TypeScript + MySQL",
+      "server/src/routes/": "Endpoints REST",
+      "server/src/controllers/": "Lógica de negocio",
+      "server/src/models/": "Modelos de datos",
+      "server/src/db/": "Conexión, migraciones, seeds",
+      "server/src/middleware/": "Auth JWT, role check",
+      "shared/": "Tipos TypeScript compartidos",
+      "docs/": "Documentación"
+    }
+  },
+  "phases": [
+    {
+      "phase": 0,
+      "name": "Limpieza, reestructuración a web/ y documentación del código existente",
+      "status": "completada",
+      "tasks": [
+        "Crear estructura web/ y mover: app/ → web/app/, public/ → web/public/",
+        "Mover configs raíz a web/ (package.json, next.config.ts, tsconfig.json, postcss.config.mjs, eslint.config.mjs, next-env.d.ts)",
+        "Eliminar archivos basura del frontend legacy",
+        "Arreglar globals.css: solo @import 'tailwindcss'",
+        "Migrar JSX → TSX y tipado completo",
+        "Instalar deps: clsx, tailwind-merge, zustand, framer-motion",
+        "JSDoc en todos los archivos",
+        "READMEs por carpeta + CHANGELOG.md"
+      ]
+    },
+    {
+      "phase": 1,
+      "name": "Login colapsable en header + explicación del juego + roles",
+      "status": "completada",
+      "tasks": [
+        "Header fijo con logo y botón 'Iniciar sesión' colapsable",
+        "Hero section: presentación del juego y los 3 planetas",
+        "Formulario login/registro se despliega desde el header",
+        "Redirección post-login por rol (admin→/admin, tutor→/dashboard, student→/dashboard)",
+        "Protección de rutas según rol",
+        "Store Zustand con persistencia localStorage"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Backend Express 5 + MySQL",
+      "status": "completada",
+      "tasks": [
+        "server/package.json, tsconfig, estructura src/",
+        "Conexión MySQL con mysql2, pool",
+        "Tablas: users, planets, courses, levels, student_progress, tutor_students, sessions",
+        "Endpoints: auth (register/login), admin (users/assign-role), planets, tutor/students",
+        "JWT middleware, role middleware",
+        "Seed con datos de ejemplo",
+        "JSDoc completo, README.md"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Cards interactivas de planetas por rol",
+      "status": "completada",
+      "tasks": [
+        "Vista Estudiante: cards con progreso y niveles bloqueados/desbloqueados",
+        "Vista Tutor: cards con explicación pedagógica + estudiantes",
+        "Vista Admin: tabla de usuarios con asignación de roles"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Secciones informativas",
+      "status": "completada",
+      "tasks": [
+        "/about: qué es el proyecto, planetas, tecnologías",
+        "/how-to-play: reglas del juego",
+        "/maestro: dashboard tutor protegido por rol"
+      ]
+    },
+    {
+      "phase": 5,
+      "name": "Optimización de rendimiento y diseño infantil",
+      "status": "completada",
+      "tasks": [
+        "FondoCosmico optimizado: 320→80 estrellas, sin shadowBlur, nebulosas cacheadas en offscreen",
+        "Planeta.tsx: RAF reemplazado por animaciones CSS (@keyframes float/ping/bounce)",
+        "Lazy loading de FondoCosmico con dynamic() en todas las páginas",
+        "next.config.ts: imágenes AVIF/WebP, removidos console.log en prod",
+        "Fix hydration mismatch: suppressHydrationWarning en html/body",
+        "Fix hydration race condition: flag _hydrated en auth-store para proteger rutas",
+        "Hero title con gradiente animado (shimmer), más pequeño pero con presencia",
+        "Planet cards en landing usando Planeta.tsx (esfera 3D animada)",
+        "About y How-to-play rediseñados con fondo cósmico, animaciones, colores vibrantes",
+        "CONTEXT.md creado para handoff entre sesiones"
+      ]
+    },
+    {
+      "phase": 6,
+      "name": "Pendiente — Conectar backend real",
+      "status": "pendiente",
+      "tasks": [
+        "Reemplazar mock de auth-store.ts por llamadas reales a server/",
+        "Iniciar servidor Express + MySQL para que admin y dashboard funcionen con datos reales",
+        "Probar login, registro y asignación de roles contra BD",
+        "Conectar dashboard con progreso real de estudiantes"
+      ]
+    }
+  ],
+  "technical_notes": {
+    "tailwind": "v4 con @import 'tailwindcss'. Sin tailwind.config.js.",
+    "framer_motion": "Animaciones del login colapsable y transiciones.",
+    "zustand": "Estado global + persistencia localStorage para sesión. Flag _hydrated para proteger rutas.",
+    "mysql": "mysql2 con promesas y pool de conexiones.",
+    "jwt": "jsonwebtoken para auth; middleware de verificación y role check.",
+    "typescript": "Estricto en todo el código. shared/types.ts para contratos.",
+    "documentation": "JSDoc en TODAS las funciones exportadas. README por carpeta."
+  }
+}
