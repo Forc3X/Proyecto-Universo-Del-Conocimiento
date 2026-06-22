@@ -1,13 +1,3 @@
-/**
- * Header — Barra superior con navegación y login colapsable.
- *
- * - Muestra el logo del proyecto y botón "Iniciar sesión".
- * - Al hacer clic, despliega un formulario de login/registro.
- * - Cuando el usuario está autenticado, muestra su nombre y rol.
- * - La navegación cambia según el rol (admin/tutor/student).
- *
- * @todo Conectar con backend real (Fase 2) y añadir avatar.
- */
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -24,12 +14,10 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [tab, setTab] = useState<'login' | 'register'>('login');
 
-  // Formulario de login
   const [loginUser, setLoginUser] = useState('');
   const [loginPass, setLoginPass] = useState('');
   const [loginError, setLoginError] = useState('');
 
-  // Formulario de registro
   const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regUser, setRegUser] = useState('');
@@ -39,7 +27,6 @@ export default function Header() {
 
   const formRef = useRef<HTMLDivElement | null>(null);
 
-  // Cerrar formulario al hacer clic fuera
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (formRef.current && !formRef.current.contains(e.target as Node)) {
@@ -108,7 +95,6 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-black/60 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-3 text-white no-underline">
           <span className="text-2xl">🌌</span>
           <span className="font-bold text-lg tracking-wide hidden sm:inline">
@@ -116,7 +102,6 @@ export default function Header() {
           </span>
         </Link>
 
-        {/* Navegación pública (siempre visible) */}
         <div className="flex items-center gap-4">
           <Link href="/about" className="text-xs text-slate-400 hover:text-white transition-colors hidden sm:inline">
             Acerca de
@@ -125,7 +110,6 @@ export default function Header() {
             Cómo jugar
           </Link>
 
-          {/* Navegación (cuando hay sesión) */}
           {token && user ? (
             <nav className="flex items-center gap-4 ml-4 pl-4 border-l border-white/10">
               {user.role === 'admin' && (
@@ -163,7 +147,6 @@ export default function Header() {
             </div>
           </nav>
         ) : (
-          /* Botón Iniciar sesión */
           <button
             onClick={() => {
               setIsOpen(!isOpen);
@@ -178,7 +161,6 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Formulario colapsable */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -190,7 +172,6 @@ export default function Header() {
             className="overflow-hidden border-t border-white/10 bg-black/80 backdrop-blur-xl"
           >
             <div className="max-w-md mx-auto px-6 py-8">
-              {/* Tabs */}
               <div className="flex mb-6 border-b border-white/10">
                 <button
                   onClick={() => { setTab('login'); resetRegForm(); }}
@@ -214,7 +195,6 @@ export default function Header() {
                 </button>
               </div>
 
-              {/* Login */}
               {tab === 'login' && (
                 <div className="space-y-4">
                   <div>
@@ -255,7 +235,6 @@ export default function Header() {
                 </div>
               )}
 
-              {/* Registro */}
               {tab === 'register' && (
                 <div className="space-y-4">
                   {regSuccess ? (

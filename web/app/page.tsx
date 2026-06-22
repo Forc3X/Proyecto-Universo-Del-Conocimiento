@@ -15,14 +15,21 @@ const PLANETAS_PREVIEW = [
     gradient: 'radial-gradient(circle at 35% 30%, #00f5ff 0%, #0080ff 40%, #0030b0 65%, #000d40 100%)',
     glow: '#00f5ff',
     glowColor: '#00e4ff',
+    cursos: [
+      { name: 'Cinturón de Asteroides', description: 'Sumas y restas básicas', levels: [{ name: 'Sumas básicas', description: '' }, { name: 'Restas básicas', description: '' }, { name: 'Reto del Cinturón', description: '' }] },
+      { name: 'Campo de Cometas', description: 'Multiplicación y división', levels: [{ name: 'Tablas de multiplicar', description: '' }, { name: 'Multiplicación', description: '' }, { name: 'Reto del Cometa', description: '' }] },
+    ],
   },
   {
-    nombre: 'Verbum',
-    materia: 'Lengua',
+    nombre: 'Letralia',
+    materia: 'Lenguas',
     descripcion: 'Conquista las palabras, la gramática y la lectura en una galaxia literaria.',
     gradient: 'radial-gradient(circle at 35% 30%, #df80ff 0%, #9b30ff 35%, #5a00b0 65%, #1a0040 100%)',
     glow: '#bf40ff',
     glowColor: '#c840ff',
+    cursos: [
+      { name: 'Tormenta de Sílabas', description: 'Separación silábica y acentuación', levels: [{ name: 'Separación silábica', description: '' }, { name: 'Acentuación', description: '' }, { name: 'Reto de la Tormenta', description: '' }] },
+    ],
   },
   {
     nombre: 'Naturae',
@@ -31,6 +38,9 @@ const PLANETAS_PREVIEW = [
     gradient: 'radial-gradient(circle at 35% 30%, #80ffb4 0%, #00e070 35%, #008040 65%, #001a14 100%)',
     glow: '#00ff88',
     glowColor: '#00f080',
+    cursos: [
+      { name: 'Bosque Cósmico', description: 'Seres vivos y reinos de la naturaleza', levels: [{ name: 'Seres vivos', description: '' }, { name: 'Reinos naturales', description: '' }, { name: 'Reto del Bosque', description: '' }] },
+    ],
   },
 ];
 
@@ -118,6 +128,7 @@ export default function LandingPage() {
                       glow={p.glow}
                       glowColor={p.glowColor}
                       delay={i * 0.5}
+                      cursos={p.cursos}
                     />
                   </div>
                   <p className="text-sm text-slate-300 leading-relaxed mt-2">{p.descripcion}</p>
@@ -128,9 +139,7 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      <footer className="relative z-10 text-center pb-8 text-slate-600 text-xs tracking-widest uppercase">
-        ✦ Tesis de Grado — PNF Informática, UPTAEB &nbsp;✦
-      </footer>
+
 
       <style>{`
         .cosmic-title {

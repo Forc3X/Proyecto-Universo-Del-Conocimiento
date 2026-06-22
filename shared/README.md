@@ -1,6 +1,6 @@
 # 🔗 Shared — Contratos compartidos
 
-Tipos TypeScript compartidos entre frontend (`web/`) y backend (`server/`).
+Tipos TypeScript compartidos del frontend.
 
 ## Archivo: `types.ts`
 

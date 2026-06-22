@@ -1,12 +1,3 @@
-/**
- * Admin — Panel de administración para asignación de roles.
- *
- * Muestra todos los usuarios registrados y permite al admin
- * asignarles rol (student/tutor).
- *
- * @todo (Fase 2) Conectar con backend real.
- * @todo Añadir búsqueda, filtros y paginación.
- */
 'use client';
 
 import { useEffect } from 'react';
@@ -40,7 +31,6 @@ export default function AdminPage() {
           Asigna roles a los usuarios registrados para que puedan acceder al sistema.
         </p>
 
-        {/* Usuarios pendientes */}
         <section className="mb-12">
           <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
             <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
@@ -82,7 +72,6 @@ export default function AdminPage() {
           )}
         </section>
 
-        {/* Usuarios con rol asignado */}
         <section>
           <h2 className="text-lg font-bold text-white mb-4">
             Usuarios del sistema ({assignedUsers.length})

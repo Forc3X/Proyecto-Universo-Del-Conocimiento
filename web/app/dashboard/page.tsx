@@ -1,15 +1,7 @@
-/**
- * Dashboard — Mapa Estelar con vistas separadas por rol.
- *
- * - **Student**: planetas con niveles y progreso.
- * - **Tutor**: planetas con explicación pedagógica + lista de estudiantes.
- *
- * Redirige a / si no hay sesión o si el rol es admin.
- */
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '../../lib/auth-store';
@@ -17,7 +9,6 @@ import { useAuthStore } from '../../lib/auth-store';
 const FondoCosmico = dynamic(() => import('../FondoCosmico'), { ssr: false });
 import type { Planet, Course, Level, StudentProgress } from '../../../shared/types';
 
-/* ───────── Datos mock de planetas (hasta que exista backend) ───────── */
 const MOCK_PLANETS: Planet[] = [
   {
     id: 1,
@@ -55,9 +46,9 @@ const MOCK_PLANETS: Planet[] = [
   },
   {
     id: 2,
-    name: 'Verbum',
+    name: 'Letralia',
     description: 'Conquista palabras, gramática y lectura.',
-    shortDescription: 'Lengua',
+    shortDescription: 'Lenguas',
     color: '#bf40ff',
     gradientStyle: 'radial-gradient(circle at 35% 30%, #df80ff 0%, #9b30ff 35%, #5a00b0 65%, #1a0040 100%)',
     glow: '#bf40ff',
@@ -103,14 +94,12 @@ const MOCK_PLANETS: Planet[] = [
   },
 ];
 
-/* ───────── Mock de progreso estudiantil ───────── */
 const MOCK_PROGRESS: Record<number, StudentProgress> = {
   1: { levelId: 1, status: 'completed', score: 90, stars: 3 },
   2: { levelId: 2, status: 'unlocked', score: 0, stars: 0 },
   3: { levelId: 3, status: 'locked', score: 0, stars: 0 },
 };
 
-/* ───────── Vista: Estudiante ───────── */
 function StudentView({ planets, progress }: { planets: Planet[]; progress: Record<number, StudentProgress> }) {
   const [expanded, setExpanded] = useState<number | null>(null);
 
@@ -194,7 +183,6 @@ function StudentView({ planets, progress }: { planets: Planet[]; progress: Recor
   );
 }
 
-/* ───────── Vista: Tutor ───────── */
 function TutorView({ planets }: { planets: Planet[] }) {
   const { users } = useAuthStore();
   const myStudents = users.filter((u) => u.role === 'student');
@@ -211,7 +199,6 @@ function TutorView({ planets }: { planets: Planet[] }) {
       <p className="text-center text-slate-400 text-sm">Visualiza el progreso de tus astronautas</p>
 
       <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-        {/* Planetas con explicación pedagógica */}
         <div className="space-y-4">
           <h2 className="text-lg font-bold text-white">Planetas</h2>
           {planets.map((planet) => (
@@ -244,7 +231,6 @@ function TutorView({ planets }: { planets: Planet[] }) {
           ))}
         </div>
 
-        {/* Estudiantes */}
         <div className="space-y-4">
           <h2 className="text-lg font-bold text-white">Mis estudiantes ({myStudents.length})</h2>
           {myStudents.length === 0 ? (
@@ -268,7 +254,6 @@ function TutorView({ planets }: { planets: Planet[] }) {
   );
 }
 
-/* ───────── Página principal ───────── */
 export default function Dashboard() {
   const router = useRouter();
   const { user, _hydrated } = useAuthStore();
@@ -280,7 +265,6 @@ export default function Dashboard() {
     }
   }, [user, router, _hydrated]);
 
-  // El admin no tiene dashboard, va a /admin
   useEffect(() => {
     if (!_hydrated) return;
     if (user?.role === 'admin') {

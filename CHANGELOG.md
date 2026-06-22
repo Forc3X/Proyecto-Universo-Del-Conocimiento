@@ -2,6 +2,22 @@
 
 Todas las modificaciones significativas del proyecto se documentan aquí.
 
+## [0.6.0] — 2026-06-21 (Mejoras visuales y frontend)
+
+### Añadido
+- Modal de explicación de módulo al hacer clic en "EXPLORAR" en un planeta
+- Elementos temáticos flotantes en planetas (símbolos matemáticos, letras, iconos de naturaleza)
+
+### Modificado
+- `web/app/page.tsx`: planetas en landing ahora tienen datos de cursos para el modal
+- `web/app/components/Planeta.tsx`:
+  - Mejorada textura: capas de anillos atmosféricos, bandas, brillo especular
+  - Añadidos elementos temáticos flotantes (Numérix: +−×÷=, Letralia: A B C D, Naturae: 🌿🌱🍃)
+  - Nuevo modal con explicación del módulo (cursos y niveles)
+- `web/app/about/page.tsx`: "Verbum" → "Letralia", "Lengua" → "Lenguas"
+- `web/app/dashboard/page.tsx`: "Verbum" → "Letralia"
+- `web/app/maestro/page.tsx`: "Verbum" → "Letralia"
+
 ## [0.5.0] — 2026-06-20 (Optimización + Diseño infantil)
 
 ### Añadido
@@ -36,19 +52,10 @@ Todas las modificaciones significativas del proyecto se documentan aquí.
 - Navegación pública a /about y /how-to-play en el header (siempre visible)
 - Navegación a /maestro para usuarios con rol tutor
 
-## [0.3.0] — 2026-06-20 (Fase 2-3)
-
-### Añadido
-- `server/`: backend Express 5 con MySQL, JWT auth, migraciones y seed
-- 5 controladores (auth, admin, planets, tutor) con rutas y middlewares
-- Tablas SQL: users, planets, courses, levels, student_progress, tutor_students, sessions
-- Datos semilla con 3 planetas, cursos, niveles y usuarios de ejemplo (admin/tutor/student)
-- Cards interactivas en dashboard con progreso por planeta y niveles
-
 ## [0.2.0] — 2026-06-20 (Fase 1)
 
 ### Añadido
-- `shared/types.ts`: tipos compartidos (User, Planet, Course, Level, AuthResponse, etc.)
+- `shared/types.ts`: tipos compartidos
 - `web/lib/auth-store.ts`: store Zustand con persistencia para autenticación y roles
 - `web/components/Header.tsx`: header fijo con login/registro colapsable (Framer Motion)
 - `web/app/admin/page.tsx`: panel Admin para asignación de roles a usuarios
@@ -64,11 +71,10 @@ Todas las modificaciones significativas del proyecto se documentan aquí.
 ## [0.1.0] — 2026-06-20 (Fase 0)
 
 ### Añadido
-- Reestructuración del proyecto a monorepo: `web/`, `server/`, `shared/`, `docs/`
+- Reestructuración del proyecto a monorepo: `web/`, `shared/`, `docs/`
 - Dependencias: `clsx`, `tailwind-merge`, `zustand`, `framer-motion`
 - JSDoc completo en todos los archivos del frontend
-- README.md en raíz, `web/`, `web/app/`, `web/components/`, `server/`, `shared/`, `docs/`
-- `PLAN.json` con el plan de trabajo detallado para handoff entre IAs
+- README.md en raíz, `web/`, `web/app/`, `web/components/`, `shared/`, `docs/`
 - `CHANGELOG.md` (este archivo)
 
 ### Modificado

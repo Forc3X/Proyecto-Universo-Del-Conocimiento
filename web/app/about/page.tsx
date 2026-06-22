@@ -6,16 +6,6 @@ import { motion } from 'framer-motion';
 
 const FondoCosmico = dynamic(() => import('../FondoCosmico'), { ssr: false });
 
-const TECH_STACK = [
-  { name: 'Next.js 16', desc: 'Framework React con App Router y renderizado híbrido.', icon: '⚛️' },
-  { name: 'TypeScript', desc: 'Tipado estricto para mayor robustez.', icon: '📘' },
-  { name: 'Tailwind CSS v4', desc: 'Estilos utilitarios con diseño responsivo.', icon: '🎨' },
-  { name: 'Framer Motion', desc: 'Animaciones fluidas y transiciones.', icon: '✨' },
-  { name: 'Zustand', desc: 'Estado global liviano con persistencia.', icon: '🗄️' },
-  { name: 'Express 5 + MySQL', desc: 'API REST con base de datos relacional.', icon: '🗃️' },
-  { name: 'Ollama + Gemma', desc: 'IA local adaptativa para generar preguntas (próximamente).', icon: '🤖' },
-];
-
 const planetasInfo = [
   {
     nombre: 'Numérix', icon: '🔢', materia: 'Matemáticas',
@@ -25,7 +15,7 @@ const planetasInfo = [
     glow: '#00f5ff',
   },
   {
-    nombre: 'Verbum', icon: '📖', materia: 'Lengua',
+    nombre: 'Letralia', icon: '📖', materia: 'Lenguas',
     desc: 'Gramática, vocabulario, ortografía y comprensión lectora.',
     gradient: 'from-purple-500/20 to-indigo-900/30',
     border: 'border-purple-500/30',
@@ -72,9 +62,9 @@ export default function AboutPage() {
             <h2 className="text-2xl font-bold text-white mb-4">📖 ¿Cómo nació este proyecto?</h2>
             <div className="space-y-3 text-slate-300 text-sm leading-relaxed">
               <p>
-                Este proyecto nace como <strong className="text-white">Tesis de Grado</strong> del PNF Informática,
-                Trayecto II, en la <strong className="text-white">UPTAEB &ldquo;Federico Brito Figueroa&rdquo;</strong>
-                (La Victoria, Estado Aragua, Venezuela).
+                Este proyecto nace de la necesidad de formar jóvenes mediante técnicas
+                poco convencionales, combinando la educación con dinámicas de juego para
+                hacer del aprendizaje una experiencia atractiva y significativa.
               </p>
               <p>
                 La meta es ofrecer una herramienta <strong className="text-cyan-300">offline, gratuita y sin castigos</strong>
@@ -117,27 +107,6 @@ export default function AboutPage() {
                   <p className="text-xs uppercase tracking-widest text-slate-400 mb-3">{p.materia}</p>
                   <p className="text-sm text-slate-300">{p.desc}</p>
                 </motion.div>
-              ))}
-            </div>
-          </motion.section>
-
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm"
-          >
-            <h2 className="text-2xl font-bold text-white mb-4">⚙️ Tecnología usada</h2>
-            <div className="grid sm:grid-cols-2 gap-4">
-              {TECH_STACK.map((tech) => (
-                <div key={tech.name} className="flex items-start gap-3">
-                  <div className="text-xl mt-0.5">{tech.icon}</div>
-                  <div>
-                    <div className="text-sm font-semibold text-white">{tech.name}</div>
-                    <div className="text-xs text-slate-400">{tech.desc}</div>
-                  </div>
-                </div>
               ))}
             </div>
           </motion.section>

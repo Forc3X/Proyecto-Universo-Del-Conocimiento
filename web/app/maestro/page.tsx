@@ -1,12 +1,3 @@
-/**
- * Maestro — Dashboard del tutor / docente.
- *
- * Vista protegida para rol 'tutor'. Muestra una visión general
- * del progreso de todos los estudiantes asignados y el detalle
- * pedagógico de cada planeta.
- *
- * @todo (Fase 2+) Conectar con backend real y añadir gráficas Recharts.
- */
 'use client';
 
 import { useEffect } from 'react';
@@ -23,8 +14,8 @@ const PLANET_DATA = [
     bg: 'from-cyan-950/20',
   },
   {
-    nombre: 'Verbum',
-    materia: 'Lengua',
+    nombre: 'Letralia',
+    materia: 'Lenguas',
     icon: '📖',
     niveles: 3,
     color: 'border-purple-500/30',
@@ -60,7 +51,6 @@ export default function MaestroPage() {
   return (
     <div className="min-h-screen bg-[#00000a] px-6 py-12">
       <div className="max-w-6xl mx-auto space-y-10">
-        {/* Encabezado */}
         <div>
           <h1 className="text-3xl md:text-4xl font-black text-white">
             🚀 Puente de Mando
@@ -70,7 +60,6 @@ export default function MaestroPage() {
           </p>
         </div>
 
-        {/* Resumen */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white/5 border border-white/10 rounded-xl p-4">
             <div className="text-2xl font-bold text-white">{students.length}</div>
@@ -92,7 +81,6 @@ export default function MaestroPage() {
           </div>
         </div>
 
-        {/* Planetas con detalle pedagógico */}
         <section>
           <h2 className="text-xl font-bold text-white mb-4">📚 Planes de estudio</h2>
           <div className="grid md:grid-cols-3 gap-4">
@@ -115,7 +103,6 @@ export default function MaestroPage() {
           </div>
         </section>
 
-        {/* Lista de estudiantes */}
         <section>
           <h2 className="text-xl font-bold text-white mb-4">👨‍🎓 Mis estudiantes</h2>
           {students.length === 0 ? (

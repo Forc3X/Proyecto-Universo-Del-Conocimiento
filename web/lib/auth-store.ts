@@ -1,35 +1,23 @@
-/**
- * Store de autenticación con Zustand + persistencia en localStorage.
- *
- * Mientras no exista backend, usa datos mock para simular
- * login, registro y asignación de roles.
- *
- * @todo (Fase 2) Reemplazar mock por llamadas reales a
- *   POST /api/auth/login, POST /api/auth/register, etc.
- */
 'use client';
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User, UserRole, LoginData, RegisterData } from '../../shared/types';
 
-/** Estado y acciones del store de autenticación */
 interface AuthState {
   user: User | null;
   token: string | null;
-  users: User[]; // Lista completa (para admin)
-  _hydrated: boolean; // true después de hidratar desde localStorage
+  users: User[];
+  _hydrated: boolean;
 
   login: (data: LoginData) => Promise<boolean>;
   register: (data: RegisterData) => Promise<boolean>;
   logout: () => void;
   assignRole: (userId: number, role: UserRole) => void;
 
-  /** Obtener ruta de redirección post-login según el rol */
   getRedirect: () => string;
 }
 
-/** Usuarios mock para desarrollo sin backend */
 const MOCK_USERS: User[] = [
   {
     id: 1,
@@ -66,7 +54,6 @@ export const useAuthStore = create<AuthState>()(
       _hydrated: false,
 
       login: async (data: LoginData) => {
-        // Simular llamada al backend
         await new Promise((r) => setTimeout(r, 300));
 
         const found = get().users.find(
