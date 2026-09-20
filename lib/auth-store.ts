@@ -22,14 +22,11 @@ export const useAuthStore = create<AuthState>()(
 
       // 1. LOGIN GLOBAL CON RASTREADORES
       login: async (data: LoginData) => {
-        console.log('===> 1. ¡El Store recibió el intento de Login!', data);
         
         // Llamamos a la base de datos SQLite
         const resultado = await verificarCredenciales(data.username, data.password);
-        console.log('===> 2. Resultado retornado por la BD al Store:', resultado);
         
         if (resultado.success && resultado.usuario) {
-          console.log('===> 3. Login Exitoso. Guardando usuario en el estado global.');
           set({
             user: {
               id: resultado.usuario.id,
@@ -43,13 +40,11 @@ export const useAuthStore = create<AuthState>()(
           return true;
         }
         
-        console.log('===> 3. Login Fallido. Las credenciales no coincidieron en la BD.');
         return false;
       },
 
       // 2. REGISTRO GLOBAL
       register: async (data: RegisterData) => {
-        console.log('===> Intentando registrar usuario desde el Store:', data);
         const resultado = await registrarUsuario({
           nombre: data.name,
           correo: data.email,

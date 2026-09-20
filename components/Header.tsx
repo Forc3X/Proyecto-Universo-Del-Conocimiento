@@ -12,7 +12,9 @@ export default function Header() {
   const { user, token, login, register, logout, getRedirect } = useAuthStore();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [tab, setTab] = useState<'login' | 'register'>('login');
+  const [loading, setLoading] = useState(false);
 
   const [loginUser, setLoginUser] = useState('');
   const [loginPass, setLoginPass] = useState('');
@@ -55,10 +57,12 @@ export default function Header() {
 
 const handleLogin = async () => {
     setLoginError('');
+    setLoading(true);
     
     // Llamamos al login del store que ahora consulta SQLite de forma interna
     const ok = await login({ username: loginUser, password: loginPass } as LoginData);
     
+    setLoading(false);
     if (ok) {
       setIsOpen(false);
       resetLoginForm();
@@ -70,14 +74,12 @@ const handleLogin = async () => {
 
 
 const handleRegister = async () => { 
-
-
-
     if (!regName || !regEmail || !regUser || !regPass) {
       setRegError('Todos los campos son obligatorios.');
       return;
     }
     
+    setLoading(true);
     const ok = await register({
       name: regName,
       email: regEmail,
@@ -85,6 +87,7 @@ const handleRegister = async () => {
       password: regPass,
     } as RegisterData);
 
+    setLoading(false);
     if (ok) {
       setRegSuccess(true);
       setTimeout(() => {
@@ -113,32 +116,34 @@ const handleRegister = async () => {
         </Link>
 
         <div className="flex items-center gap-4">
-          <Link href="/about" className="text-xs text-slate-400 hover:text-white transition-colors hidden sm:inline">
-            Acerca de
-          </Link>
-          <Link href="/how-to-play" className="text-xs text-slate-400 hover:text-white transition-colors hidden sm:inline">
-            Cómo jugar
-          </Link>
+          <nav className="hidden sm:flex items-center gap-8">
+            <Link href="/about" className="text-base font-medium text-gray-200 hover:text-cyan-400 transition-colors px-2 py-1">
+              Acerca de
+            </Link>
+            <Link href="/how-to-play" className="text-base font-medium text-gray-200 hover:text-cyan-400 transition-colors px-2 py-1">
+              Cómo jugar
+            </Link>
+          </nav>
 
           {token && user ? (
-            <nav className="flex items-center gap-4 ml-4 pl-4 border-l border-white/10">
+            <nav className="flex items-center gap-8 ml-6 pl-6 border-l border-white/10">
               {user.role === 'admin' && (
-                <Link href="/admin" className="text-sm text-slate-300 hover:text-white transition-colors">
+                <Link href="/admin" className="text-base font-medium text-gray-200 hover:text-cyan-400 transition-colors px-2 py-1">
                   Panel Admin
                 </Link>
               )}
               {user.role === 'tutor' && (
                 <>
-                  <Link href="/maestro" className="text-sm text-slate-300 hover:text-white transition-colors">
+                  <Link href="/maestro" className="text-base font-medium text-gray-200 hover:text-cyan-400 transition-colors px-2 py-1">
                     Mis Estudiantes
                   </Link>
-                  <Link href="/dashboard" className="text-sm text-slate-300 hover:text-white transition-colors">
+                  <Link href="/dashboard" className="text-base font-medium text-gray-200 hover:text-cyan-400 transition-colors px-2 py-1">
                     Dashboard
                   </Link>
                 </>
               )}
               {user.role === 'student' && (
-                <Link href="/dashboard" className="text-sm text-slate-300 hover:text-white transition-colors">
+                <Link href="/dashboard" className="text-base font-medium text-gray-200 hover:text-cyan-400 transition-colors px-2 py-1">
                   Dashboard
                 </Link>
               )}
@@ -168,8 +173,38 @@ const handleRegister = async () => {
             Iniciar sesión
           </button>
         )}
+
+          {/* Botón menú móvil */}
+          <button
+            className="sm:hidden text-white p-2 hover:bg-white/10 rounded"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            ☰
+          </button>
         </div>
       </div>
+
+      {/* Menú Móvil */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="sm:hidden border-t border-white/10 bg-black/90 backdrop-blur-xl overflow-hidden"
+          >
+            <div className="flex flex-col p-4 gap-4">
+              <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="text-sm text-slate-300 hover:text-white">
+                Acerca de
+              </Link>
+              <Link href="/how-to-play" onClick={() => setMobileMenuOpen(false)} className="text-sm text-slate-300 hover:text-white">
+                Cómo jugar
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {isOpen && (
@@ -238,9 +273,10 @@ const handleRegister = async () => {
 
                   <button
                     onClick={handleLogin}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+                    disabled={loading}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Entrar
+                    {loading ? 'Cargando...' : 'Entrar'}
                   </button>
                 </div>
               )}
@@ -309,10 +345,10 @@ const handleRegister = async () => {
 
                       <button
                         onClick={handleRegister}
-                        className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
-                        
-                     >
-                        Crear cuenta
+                        disabled={loading}
+                        className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {loading ? 'Cargando...' : 'Crear cuenta'}
                       </button>
 
                       <p className="text-xs text-slate-500 text-center">

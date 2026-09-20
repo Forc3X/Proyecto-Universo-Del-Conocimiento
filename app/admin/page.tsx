@@ -1,24 +1,31 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../../lib/auth-store';
 import type { UserRole } from '../../shared/types';
 
 export default function AdminPage() {
   const router = useRouter();
-  const { user, users, assignRole, _hydrated } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
+  const users: any[] = useAuthStore((s: any) => s.users ?? []);
+  const assignRole = useAuthStore((s: any) => s.assignRole ?? (() => {}));
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!_hydrated) return;
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     if (!user) {
       router.push('/');
     } else if (user.role !== 'admin') {
       router.push('/dashboard');
     }
-  }, [user, router, _hydrated]);
+  }, [user, router, mounted]);
 
-  if (!_hydrated || !user || user.role !== 'admin') return null;
+  if (!mounted || !user || user.role !== 'admin') return null;
 
   const pendingUsers = users.filter((u) => u.role === 'pending');
   const assignedUsers = users.filter((u) => u.role !== 'pending');

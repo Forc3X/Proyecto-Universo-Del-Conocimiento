@@ -2,8 +2,10 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PlanetVisual from './PlanetVisual';
 
 interface PlanetaProps {
+  planetId?: number;
   nombre?: string;
   materia?: string;
   gradient?: string;
@@ -119,64 +121,17 @@ export default function Planeta({
             <div
               onMouseEnter={() => setHovered(true)}
               onMouseLeave={() => setHovered(false)}
-              className="relative rounded-full flex flex-col items-center justify-center cursor-pointer overflow-hidden"
+              className="relative flex flex-col items-center justify-center cursor-pointer"
               style={{
-                width: 185, height: 185,
-                background: gradient,
-                boxShadow: `
-                  0 0 45px ${glow}80,
-                  0 0 90px ${glow}45,
-                  0 0 160px ${glow}20,
-                  inset 0 -25px 60px rgba(0,0,0,0.50),
-                  inset 0 12px 35px rgba(255,255,255,0.13)
-                `,
                 willChange: 'transform',
-                transition: 'box-shadow 0.4s ease, transform 0.3s ease',
-                transform: hovered ? 'scale(1.07)' : 'scale(1)',
+                transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                transform: hovered ? 'scale(1.08)' : 'scale(1)',
               }}
             >
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `
-                    radial-gradient(circle at 70% 20%, rgba(255,255,255,0.06) 0%, transparent 40%),
-                    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.04) 0%, transparent 30%),
-                    radial-gradient(circle at 50% 50%, rgba(0,0,0,0.08) 0%, transparent 60%)
-                  `,
-                  borderRadius: '50%',
-                }}
-              />
-              <div
-                className="absolute"
-                style={{
-                  width: 75, height: 35,
-                  top: 20, left: 22,
-                  background: 'radial-gradient(ellipse, rgba(255,255,255,0.25) 0%, transparent 100%)',
-                  filter: 'blur(6px)',
-                  borderRadius: '50%',
-                  transform: 'rotate(-20deg)',
-                }}
-              />
-              <div
-                className="absolute w-full"
-                style={{
-                  top: '35%', height: '8%',
-                  background: `linear-gradient(90deg, transparent 5%, ${glowColor}15 30%, ${glowColor}25 50%, ${glowColor}15 70%, transparent 95%)`,
-                  filter: 'blur(4px)',
-                  transform: 'rotate(-10deg)',
-                }}
-              />
-              <div
-                className="absolute w-full"
-                style={{
-                  top: '60%', height: '6%',
-                  background: `linear-gradient(90deg, transparent 10%, ${glowColor}10 35%, ${glowColor}20 55%, ${glowColor}10 75%, transparent 90%)`,
-                  filter: 'blur(3px)',
-                  transform: 'rotate(5deg)',
-                }}
-              />
+              <PlanetVisual name={nombre} />
+              
               <span
-                className="font-black tracking-wider text-center z-10"
+                className="font-black tracking-wider text-center z-10 mt-3"
                 style={{
                   fontSize: '1.15rem', color: '#ffffff',
                   textShadow: `0 0 22px ${glow}, 0 2px 8px rgba(0,0,0,0.7)`,

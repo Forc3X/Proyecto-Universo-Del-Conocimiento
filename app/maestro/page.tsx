@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../../lib/auth-store';
 
@@ -33,18 +33,24 @@ const PLANET_DATA = [
 
 export default function MaestroPage() {
   const router = useRouter();
-  const { user, users, _hydrated } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
+  const users: any[] = useAuthStore((s: any) => s.users ?? []);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!_hydrated) return;
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     if (!user) {
       router.push('/');
     } else if (user.role !== 'tutor') {
       router.push(user.role === 'admin' ? '/admin' : '/dashboard');
     }
-  }, [user, router, _hydrated]);
+  }, [user, router, mounted]);
 
-  if (!_hydrated || !user || user.role !== 'tutor') return null;
+  if (!mounted || !user || user.role !== 'tutor') return null;
 
   const students = users.filter((u) => u.role === 'student');
 

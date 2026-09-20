@@ -19,16 +19,21 @@ export const AppSchema = new Schema({
 });
 
 // 3. Instancia de la base de datos
-export const db = new PowerSyncDatabase({
-  database: {
-    dbFilename: 'universo_conocimiento.sqlite'
-  },
-  schema: AppSchema
-});
+// SOLO se crea en el navegador — en el servidor/SSR PowerSync no existe
+// (css: evitar el error "execute is not a function" durante el build)
+export const db: PowerSyncDatabase | null = typeof window !== 'undefined'
+  ? new PowerSyncDatabase({
+      database: {
+        dbFilename: 'universo_conocimiento.sqlite'
+      },
+      schema: AppSchema
+    })
+  : null;
 
 // 4. Función de inicialización
 export const inicializarBaseDatos = async () => {
   try {
+    if (!db) return;
     // 1. Inicializa la base de datos local
     await db.init();
     console.log('🌌 Base de datos local inicializada.');

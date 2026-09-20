@@ -5,10 +5,9 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Planeta from './components/Planeta';
 
-const CosmicBackground = dynamic(() => import('./FondoCosmico'), { ssr: false });
-
 const PLANETAS_PREVIEW = [
   {
+    id: 1,
     nombre: 'Numérix',
     materia: 'Matemáticas',
     descripcion: 'Domina números, operaciones y geometría en un mundo de asteroides y cometas.',
@@ -16,11 +15,12 @@ const PLANETAS_PREVIEW = [
     glow: '#00f5ff',
     glowColor: '#00e4ff',
     cursos: [
-      { name: 'Cinturón de Asteroides', description: 'Sumas y restas básicas', levels: [{ name: 'Sumas básicas', description: '' }, { name: 'Restas básicas', description: '' }, { name: 'Reto del Cinturón', description: '' }] },
-      { name: 'Campo de Cometas', description: 'Multiplicación y división', levels: [{ name: 'Tablas de multiplicar', description: '' }, { name: 'Multiplicación', description: '' }, { name: 'Reto del Cometa', description: '' }] },
+      { name: 'Cinturón de Asteroides', description: 'Sumas y restas básicas', levels: [{ id: 1, name: 'Sumas básicas', description: '' }, { id: 2, name: 'Restas básicas', description: '' }, { id: 3, name: 'Reto del Cinturón', description: '' }] },
+      { name: 'Campo de Cometas', description: 'Multiplicación y división', levels: [{ id: 4, name: 'Tablas de multiplicar', description: '' }, { id: 5, name: 'Multiplicación', description: '' }, { id: 6, name: 'Reto del Cometa', description: '' }] },
     ],
   },
   {
+    id: 2,
     nombre: 'Letralia',
     materia: 'Lenguas',
     descripcion: 'Conquista las palabras, la gramática y la lectura en una galaxia literaria.',
@@ -28,10 +28,11 @@ const PLANETAS_PREVIEW = [
     glow: '#bf40ff',
     glowColor: '#c840ff',
     cursos: [
-      { name: 'Tormenta de Sílabas', description: 'Separación silábica y acentuación', levels: [{ name: 'Separación silábica', description: '' }, { name: 'Acentuación', description: '' }, { name: 'Reto de la Tormenta', description: '' }] },
+      { name: 'Tormenta de Sílabas', description: 'Separación silábica y acentuación', levels: [{ id: 1, name: 'Separación silábica', description: '' }, { id: 2, name: 'Acentuación', description: '' }, { id: 3, name: 'Reto de la Tormenta', description: '' }] },
     ],
   },
   {
+    id: 3,
     nombre: 'Naturae',
     materia: 'Ciencias',
     descripcion: 'Descubre los secretos de la naturaleza, los ecosistemas y el universo.',
@@ -39,7 +40,7 @@ const PLANETAS_PREVIEW = [
     glow: '#00ff88',
     glowColor: '#00f080',
     cursos: [
-      { name: 'Bosque Cósmico', description: 'Seres vivos y reinos de la naturaleza', levels: [{ name: 'Seres vivos', description: '' }, { name: 'Reinos naturales', description: '' }, { name: 'Reto del Bosque', description: '' }] },
+      { name: 'Bosque Cósmico', description: 'Seres vivos y reinos de la naturaleza', levels: [{ id: 1, name: 'Seres vivos', description: '' }, { id: 2, name: 'Reinos naturales', description: '' }, { id: 3, name: 'Reto del Bosque', description: '' }] },
     ],
   },
 ];
@@ -49,7 +50,6 @@ const PLANETAS_PREVIEW = [
 export default function LandingPage() {
   return (
     <div className="relative min-h-screen">
-      <CosmicBackground />
 
       <section className="relative z-10 flex flex-col items-center pt-16 min-h-[80vh] px-6 text-center">
         <motion.div
@@ -74,15 +74,12 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">
-            <button
-              onClick={() => {
-                const header = document.querySelector('header button');
-                if (header) (header as HTMLButtonElement).click();
-              }}
+            <Link
+              href="/dashboard"
               className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3.5 rounded-xl transition-all text-sm tracking-wider shadow-lg shadow-blue-600/30"
             >
               COMENZAR VIAJE
-            </button>
+            </Link>
             <Link
               href="/about"
               className="border border-white/20 hover:border-white/40 text-white font-semibold px-8 py-3.5 rounded-xl transition-all text-sm tracking-wider"
@@ -104,7 +101,7 @@ export default function LandingPage() {
           <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-4">
             Explora los mundos del conocimiento
           </h2>
-          <p className="text-slate-400 text-center max-w-xl mx-auto mb-12 text-sm">
+          <p className="text-slate-400 text-center max-w-2xl mx-auto mb-12 text-base md:text-lg leading-relaxed">
             Cada planeta contiene cursos y niveles adaptados al ritmo de aprendizaje del estudiante.
           </p>
 
@@ -124,6 +121,7 @@ export default function LandingPage() {
                 >
                   <div className="flex justify-center mb-4">
                     <Planeta
+                      planetId={p.id}
                       nombre={p.nombre}
                       materia={p.materia}
                       gradient={p.gradient}
@@ -133,7 +131,7 @@ export default function LandingPage() {
                       cursos={p.cursos}
                     />
                   </div>
-                  <p className="text-sm text-slate-300 leading-relaxed mt-2">{p.descripcion}</p>
+                  <p className="text-base md:text-lg text-slate-300 leading-relaxed mt-4">{p.descripcion}</p>
                 </div>
               </motion.div>
             ))}
@@ -142,22 +140,6 @@ export default function LandingPage() {
       </section>
 
 
-
-      <style>{`
-        .cosmic-title {
-          background: linear-gradient(135deg, #ffffff 0%, #80f0ff 30%, #c080ff 60%, #80ffcc 100%);
-          background-size: 200% 200%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          filter: drop-shadow(0 0 30px rgba(0,200,255,0.4)) drop-shadow(0 0 60px rgba(150,0,255,0.2));
-          animation: shimmer 4s ease-in-out infinite;
-        }
-        @keyframes shimmer {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-      `}</style>
     </div>
   );
 }

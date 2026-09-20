@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useMemo, useCallback } from 'react';
 import { getPlanetById, getLevelProgress } from '../../../lib/mock-data';
@@ -152,11 +153,11 @@ function PortalNode({
 function CoursePortalSection({
   course,
   planetColor,
-  onLevelClick,
+  planetId,
 }: {
   course: Course;
   planetColor: string;
-  onLevelClick: (levelId: number, available: boolean) => void;
+  planetId: number;
 }) {
   return (
     <div className="mb-14 last:mb-0">
@@ -173,20 +174,29 @@ function CoursePortalSection({
             const available = prog.status !== 'locked';
             const isLeft = i % 2 === 0;
 
-            const node = (
-              <button
-                onClick={() => onLevelClick(level.id, available)}
-                disabled={!available}
-                style={{ cursor: available ? 'pointer' : 'default' }}
+            const NodeContent = (
+              <PortalNode
+                number={level.order}
+                available={available}
+                color={planetColor}
+                isBoss={level.isBoss}
+              />
+            );
+
+            const node = available ? (
+              <Link
+                href={`/juego/${planetId}/${level.id}`}
+                className="transition-transform duration-300 hover:scale-110"
+              >
+                {NodeContent}
+              </Link>
+            ) : (
+              <div
+                style={{ cursor: 'default' }}
                 className="transition-transform duration-300"
               >
-                <PortalNode
-                  number={level.order}
-                  available={available}
-                  color={planetColor}
-                  isBoss={level.isBoss}
-                />
-              </button>
+                {NodeContent}
+              </div>
             );
 
             const beam = (
@@ -263,15 +273,6 @@ export default function PlanetaPage() {
   const router = useRouter();
   const planetId = parseInt(params.id, 10);
   const planet = useMemo(() => getPlanetById(planetId), [planetId]);
-
-  const handleLevelClick = useCallback(
-    (levelId: number, available: boolean) => {
-      if (available) {
-        router.push(`/juego/${planetId}/${levelId}`);
-      }
-    },
-    [planetId, router],
-  );
 
   if (!planet) {
     return (
@@ -381,7 +382,7 @@ export default function PlanetaPage() {
               <CoursePortalSection
                 course={course}
                 planetColor={planet.color}
-                onLevelClick={handleLevelClick}
+                planetId={planet.id}
               />
               {i < planet.courses.length - 1 && (
                 <div className="flex items-center gap-3 my-6">

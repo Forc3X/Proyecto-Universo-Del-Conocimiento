@@ -1,10 +1,4 @@
-'use client';
-
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-
-const FondoCosmico = dynamic(() => import('../FondoCosmico'), { ssr: false });
 
 const RULES = [
   {
@@ -38,7 +32,7 @@ const RULES = [
   {
     icon: '🪐',
     title: 'Eventos especiales',
-    desc: 'Las casillas pueden ser: Lente Gravitacional (duplica estrellas), Agujero Negro (retroceso), Estación de Servicio (+1 combustible), Meteorito (evento aleatorio).',
+    desc: 'Durante tu viaje espacial encontrarás diferentes tipos de casillas: Normales (retos matemáticos), Especiales (minijuegos de calibración y escudos), Trampas (desvíos peligrosos) y la casilla final del Guardián.',
     color: 'from-green-500/20 to-teal-900/30',
     border: 'border-green-500/30',
   },
@@ -76,7 +70,7 @@ const ROLES = [
 ];
 
 const STEPS = [
-  { step: '1', text: 'Inicia sesión y selecciona un planeta (Numérix, Verbum o Naturae).' },
+  { step: '1', text: 'Inicia sesión y selecciona un planeta (Numérix, Letralia o Naturae).' },
   { step: '2', text: 'Elige un nivel o estación orbital disponible.' },
   { step: '3', text: 'Mira la Micro-Clase "Transmisión Base Tierra" con la explicación del tema.' },
   { step: '4', text: 'Lanza el dado para avanzar en la Ruta Perimetral.' },
@@ -86,17 +80,10 @@ const STEPS = [
 
 export default function HowToPlayPage() {
   return (
-    <div className="relative min-h-screen">
-      <FondoCosmico />
-
-      <div className="relative z-10 px-6 py-16">
+    <div className="relative min-h-screen" style={{ background: '#00000a' }}>
+      <div className="relative z-10 max-w-4xl mx-auto px-6 py-12 pb-24">
         <div className="max-w-4xl mx-auto space-y-12">
-          <motion.section
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
+          <section className="text-center fade-in-up">
             <h1 className="text-4xl md:text-5xl font-black text-white mb-4 cosmic-glow">
               🚀 Cómo Jugar
             </h1>
@@ -104,44 +91,24 @@ export default function HowToPlayPage() {
               Conviértete en un astronauta del conocimiento y explora el Universo.
               ¡Cada planeta es una aventura nueva!
             </p>
-          </motion.section>
+          </section>
 
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="grid md:grid-cols-2 gap-6"
-          >
+          <section className="grid md:grid-cols-2 gap-6 fade-in-up delay-100">
             {RULES.map((rule, i) => (
-              <motion.div
+              <div
                 key={rule.title}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className={`bg-gradient-to-br ${rule.color} border ${rule.border} rounded-xl p-6 hover:scale-[1.02] transition-all`}
+                className={`bg-gradient-to-br ${rule.color} border ${rule.border} rounded-xl p-6 hover:scale-[1.02] transition-all fade-in-left`}
               >
-                <motion.div
-                  animate={{ rotate: [0, 5, -5, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
-                  className="text-3xl mb-3 inline-block"
-                >
+                <div className="text-3xl mb-3 inline-block animate-wiggle">
                   {rule.icon}
-                </motion.div>
+                </div>
                 <h3 className="text-lg font-bold text-white mb-2">{rule.title}</h3>
-                <p className="text-sm text-slate-300 leading-relaxed">{rule.desc}</p>
-              </motion.div>
+                <p className="text-base md:text-lg text-slate-300 leading-relaxed">{rule.desc}</p>
+              </div>
             ))}
-          </motion.section>
+          </section>
 
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm"
-          >
+          <section className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm fade-in-up delay-200">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">📋 Flujo del juego</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {STEPS.map((s) => (
@@ -149,61 +116,37 @@ export default function HowToPlayPage() {
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold shrink-0">
                     {s.step}
                   </div>
-                  <p className="text-sm text-slate-300">{s.text}</p>
+                  <p className="text-base text-slate-300 leading-relaxed">{s.text}</p>
                 </div>
               ))}
             </div>
-          </motion.section>
+          </section>
 
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
+          <section className="fade-in-up delay-300">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">👥 Roles</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {ROLES.map((role, i) => (
-                <motion.div
+                <div
                   key={role.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.15 }}
-                  className={`bg-gradient-to-br ${role.color} border ${role.border} rounded-xl p-6 text-center hover:scale-105 transition-transform`}
+                  className={`bg-gradient-to-br ${role.color} border ${role.border} rounded-xl p-6 text-center hover:scale-105 transition-transform fade-in-up`}
                 >
-                  <motion.div
-                    animate={{ y: [0, -6, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: i * 0.4 }}
-                    className="text-4xl mb-3"
-                  >
+                  <div className="text-4xl mb-3 animate-float">
                     {role.icon}
-                  </motion.div>
+                  </div>
                   <h3 className="text-lg font-bold text-white mb-2">{role.title}</h3>
-                  <p className="text-sm text-slate-300">{role.desc}</p>
-                </motion.div>
+                  <p className="text-base text-slate-300 leading-relaxed">{role.desc}</p>
+                </div>
               ))}
             </div>
-          </motion.section>
+          </section>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="flex justify-center gap-4"
-          >
+          <div className="flex justify-center gap-4 fade-in-up">
             <Link href="/" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
               ← Volver al inicio
             </Link>
-          </motion.div>
+          </div>
         </div>
       </div>
-
-      <style>{`
-        .cosmic-glow {
-          text-shadow: 0 0 30px rgba(0,200,255,0.3), 0 0 60px rgba(150,0,255,0.15);
-        }
-      `}</style>
     </div>
   );
 }

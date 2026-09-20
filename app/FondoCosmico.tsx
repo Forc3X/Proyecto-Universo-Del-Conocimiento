@@ -103,8 +103,10 @@ export default function FondoCosmico() {
       isVisible = !document.hidden;
     };
 
+    let resizeTimer: ReturnType<typeof setTimeout>;
     const handleResize = () => {
-      resize();
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 150);
     };
 
     const animate = (timestamp: number) => {
@@ -174,8 +176,8 @@ export default function FondoCosmico() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 block w-full h-full"
-      style={{ zIndex: 0 }}
+      className="fixed inset-0 w-full h-full pointer-events-none -z-10"
+      style={{ background: '#00000a' }}
     />
   );
 }

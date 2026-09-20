@@ -5,8 +5,9 @@ import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMemo, useState, useCallback } from 'react';
 import { getPlanetById } from '../../../../lib/mock-data';
+import { useAuthStore } from '../../../../lib/auth-store';
 import Dado3D from '../../../components/Dado3D';
-import NumerixBoard from '../../../components/NumerixBoard';
+import TableroIsometrico from '../../../components/TableroIsometrico';
 
 const FondoCosmico = dynamic(() => import('../../../FondoCosmico'), { ssr: false });
 
@@ -184,34 +185,20 @@ function GenericBoard({
             </span>
           )}
         </motion.button>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mt-6"
-        >
-          <div
-            className="inline-block px-4 py-2 rounded-xl text-[10px] leading-relaxed"
-            style={{
-              border: `1px solid ${planetColor}15`,
-              background: `${planetColor}06`,
-              color: `${planetColor}88`,
-            }}
-          >
-            <span className="font-bold tracking-widest uppercase">Módulo de Preguntas</span>
-            <br />
-            Próximamente
-          </div>
-        </motion.div>
       </div>
     </motion.div>
   );
 }
 
+function hexToRgb(hex: string) {
+  const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return r ? `${parseInt(r[1], 16)},${parseInt(r[2], 16)},${parseInt(r[3], 16)}` : '0,245,212';
+}
+
 export default function JuegoPage() {
   const params = useParams<{ planetId: string; levelId: string }>();
   const router = useRouter();
+  const { user } = useAuthStore();
   const planetId = parseInt(params.planetId, 10);
   const levelId = parseInt(params.levelId, 10);
 
@@ -231,6 +218,7 @@ export default function JuegoPage() {
   const [diceResult, setDiceResult] = useState(1);
   const [lastRoll, setLastRoll] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  const [currentPos, setCurrentPos] = useState(0);
 
   const handleRoll = useCallback(() => {
     if (diceRolling) return;
@@ -248,7 +236,7 @@ export default function JuegoPage() {
 
   if (!planet || !level) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center" style={{ background: '#00000a' }}>
+      <div className="fixed inset-0 z-[100] h-screen w-screen flex items-center justify-center" style={{ background: '#00000a' }}>
         <FondoCosmico />
         <div className="relative z-10 text-center">
           <h1 className="text-2xl font-black text-white mb-2">Nivel no encontrado</h1>
@@ -265,34 +253,89 @@ export default function JuegoPage() {
   }
 
   const course = planet.courses.find((c) => c.levels.some((l) => l.id === levelId));
+  const pc = hexToRgb(planet.color);
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ background: '#00000a' }}>
+    <div className="fixed inset-0 z-[100] h-screen w-screen overflow-hidden" style={{ background: '#00000a' }}>
       <FondoCosmico />
-      <div className="relative z-10 px-4 py-8 max-w-5xl mx-auto min-h-screen flex flex-col">
-        <button
-          onClick={() => router.push(`/planeta/${planetId}`)}
-          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors mb-4 shrink-0"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-          Volver
-        </button>
 
-        <div className="text-center mb-6 shrink-0">
-          <div className="flex items-center justify-center gap-2 text-xs text-slate-500 mb-1">
-            <span>{planet.name}</span>
-            <span className="text-slate-700">/</span>
-            <span style={{ color: planet.color }}>{course?.name}</span>
+      {/* ── HUD HEADER ── */}
+      <header
+        className="fixed top-0 left-0 w-full z-50"
+        style={{
+          background: 'linear-gradient(180deg, rgba(0,20,28,.95) 0%, transparent 100%)',
+          borderBottom: `1px solid rgba(${pc},.2)`,
+        }}
+      >
+        <div className="w-full mx-auto px-4 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-full transition-all shadow-md"
+              style={{ 
+                color: '#fff', 
+                background: `linear-gradient(135deg, ${planet.color}40, ${planet.color}20)`,
+                border: `1px solid ${planet.color}80`
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = `linear-gradient(135deg, ${planet.color}60, ${planet.color}30)`;
+                e.currentTarget.style.boxShadow = `0 0 15px ${planet.color}60`;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = `linear-gradient(135deg, ${planet.color}40, ${planet.color}20)`;
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+              VOLVER
+            </button>
+            <div style={{ borderLeft: `1px solid rgba(${pc},.3)`, height: 20 }} />
+            <div className="flex items-center gap-2">
+              <span
+                style={{
+                  fontFamily: "'Orbitron',monospace",
+                  fontWeight: 900,
+                  fontSize: '.85rem',
+                  letterSpacing: '.2em',
+                  color: planet.color,
+                  textShadow: `0 0 12px rgba(${pc},.6)`,
+                }}
+              >
+                ◈ {planet.name.toUpperCase()}
+              </span>
+              <span
+                style={{
+                  fontSize: '.55rem',
+                  letterSpacing: '.15em',
+                  color: `rgba(${pc},.5)`,
+                  border: `1px solid rgba(${pc},.3)`,
+                  padding: '2px 8px',
+                  borderRadius: 2,
+                }}
+              >
+                TABLERO CUÁNTICO
+              </span>
+            </div>
           </div>
-          <h1 className="text-lg font-black text-white">{level.name}</h1>
+          <div style={{ fontSize: '.6rem', letterSpacing: '.2em', color: `rgba(${pc},.4)` }}>
+            {user ? `JUGADOR: ${user.name.toUpperCase()}` : 'SIN SESIÓN'}
+            &nbsp;|&nbsp; CASILLA {currentPos + 1}
+          </div>
         </div>
+      </header>
 
-        <div className="flex-1 flex items-center justify-center pb-8">
-          {isNumerixLevel1 ? (
-            <NumerixBoard planetColor={planet.color} planetGlow={planet.glow} />
-          ) : (
+      {/* ── CONTENIDO PRINCIPAL ── */}
+      <div className="relative z-10 h-full" style={{ paddingTop: 56 }}>
+        {isNumerixLevel1 ? (
+          <TableroIsometrico
+            planetColor={planet.color}
+            planetGlow={planet.glow}
+            onPositionChange={setCurrentPos}
+          />
+        ) : (
+          <div className="h-full flex flex-col items-center justify-center px-4">
             <GenericBoard
               planetColor={planet.color}
               diceRolling={diceRolling}
@@ -301,29 +344,6 @@ export default function JuegoPage() {
               onRoll={handleRoll}
               onRollComplete={handleRollComplete}
             />
-          )}
-        </div>
-
-        {!isNumerixLevel1 && (
-          <div className="text-center shrink-0 pb-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              <div
-                className="inline-block px-4 py-2 rounded-xl text-[10px] leading-relaxed"
-                style={{
-                  border: `1px solid ${planet.color}15`,
-                  background: `${planet.color}06`,
-                  color: `${planet.color}88`,
-                }}
-              >
-                <span className="font-bold tracking-widest uppercase">Módulo de Preguntas</span>
-                <br />
-                Próximamente
-              </div>
-            </motion.div>
           </div>
         )}
       </div>
