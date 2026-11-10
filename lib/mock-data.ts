@@ -87,6 +87,7 @@ export const MOCK_PLANETS: Planet[] = [
 
 export const MOCK_PROGRESS: Record<number, StudentProgress> = {
   1: { levelId: 1, status: 'unlocked', score: 0, stars: 0 },
+  7: { levelId: 7, status: 'unlocked', score: 0, stars: 0 },
 };
 
 export function getPlanetById(id: number): Planet | undefined {

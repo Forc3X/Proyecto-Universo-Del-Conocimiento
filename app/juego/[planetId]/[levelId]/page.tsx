@@ -8,6 +8,7 @@ import { getPlanetById } from '../../../../lib/mock-data';
 import { useAuthStore } from '../../../../lib/auth-store';
 import Dado3D from '../../../components/Dado3D';
 import TableroIsometrico from '../../../components/TableroIsometrico';
+import TableroLetralia from '../../../components/TableroLetralia';
 
 const FondoCosmico = dynamic(() => import('../../../FondoCosmico'), { ssr: false });
 
@@ -206,13 +207,16 @@ export default function JuegoPage() {
   const level = useMemo(() => {
     if (!planet) return null;
     for (const c of planet.courses) {
-      const found = c.levels.find((l) => l.id === levelId);
+      const found = c.levels.find((l) => l.id === levelId || l.order === levelId);
       if (found) return found;
     }
     return null;
   }, [planet, levelId]);
 
-  const isNumerixLevel1 = planetId === 1 && levelId === 1;
+  const isNumerix = Number(planetId) === 1;
+  const isLetralia =
+    Number(planetId) === 2 ||
+    Boolean(planet && /letralia|verbum/i.test(planet.name));
 
   const [diceRolling, setDiceRolling] = useState(false);
   const [diceResult, setDiceResult] = useState(1);
@@ -252,8 +256,28 @@ export default function JuegoPage() {
     );
   }
 
-  const course = planet.courses.find((c) => c.levels.some((l) => l.id === levelId));
+  const course = planet.courses.find((c) => c.levels.some((l) => l.id === levelId || l.order === levelId));
   const pc = hexToRgb(planet.color);
+
+  if (isLetralia) {
+    return (
+      <div className="fixed inset-0 z-[100] h-screen w-screen overflow-hidden bg-[#1E293B]">
+        <TableroLetralia onPositionChange={setCurrentPos} />
+      </div>
+    );
+  }
+
+  if (isNumerix) {
+    return (
+      <div className="fixed inset-0 z-[100] h-screen w-screen overflow-hidden bg-[#071326]">
+        <TableroIsometrico
+          planetColor={planet.color}
+          planetGlow={planet.glow}
+          onPositionChange={setCurrentPos}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-[100] h-screen w-screen overflow-hidden" style={{ background: '#00000a' }}>
@@ -328,24 +352,16 @@ export default function JuegoPage() {
 
       {/* ── CONTENIDO PRINCIPAL ── */}
       <div className="relative z-10 h-full" style={{ paddingTop: 56 }}>
-        {isNumerixLevel1 ? (
-          <TableroIsometrico
+        <div className="h-full flex flex-col items-center justify-center px-4">
+          <GenericBoard
             planetColor={planet.color}
-            planetGlow={planet.glow}
-            onPositionChange={setCurrentPos}
+            diceRolling={diceRolling}
+            diceResult={diceResult}
+            showResult={showResult}
+            onRoll={handleRoll}
+            onRollComplete={handleRollComplete}
           />
-        ) : (
-          <div className="h-full flex flex-col items-center justify-center px-4">
-            <GenericBoard
-              planetColor={planet.color}
-              diceRolling={diceRolling}
-              diceResult={diceResult}
-              showResult={showResult}
-              onRoll={handleRoll}
-              onRollComplete={handleRollComplete}
-            />
-          </div>
-        )}
+        </div>
       </div>
 
       <style>{`
